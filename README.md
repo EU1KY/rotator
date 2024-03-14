@@ -13,11 +13,13 @@ The code is working under Micropython environment flashed to the ESP32 board.
 
 All configuration is in the config.py file. A custom azimuth map can be placed as a rotator's web gauge background, it can be created with the online tool at https://ns6t.net/azimuth/ , then properly cropped as a square bitmap and saved as a 400x400 pixels image file in static/azmap_s.jpg .
 
-Rotator is controlled remotely with a web interface running on the Microdot web server, all the updates are pushed to browser with websockets. This is how the web interface is displayed in my browser:
+The only wiring to the rotator is just a power supply (14 Volts 1A max is enough), it then connects to the preconfigured WiFi network and appears as a web server in your LAN.
+
+Rotator is controlled remotely with a web interface running on ESP32 under the Microdot web server. The interface uses websockets for live updates and command submissions. This is how the web interface is displayed in my browser:
 
 ![screenshot](https://github.com/EU1KY/rotator/assets/1841648/e5671847-bbd6-40ab-9ff1-d925bf39c139)
 
-There is a FTP server that can be started by accessing /ftp, the web server stops working in this case. The updated python and HTML/CSS files can then be uploaded with a convenient FTP client.
+There is a FTP server that can be started after accessing /ftp in the browser. The web server stops working in this case and FTP server starts. The updated python and HTML/CSS files can then be uploaded with a convenient FTP client. Thus, on-the-air code updating is possible. After updating, just power cycle the remote device to apply changes.
 
 My current working prototype:
 
