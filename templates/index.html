@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
+        <title>ROTATOR</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="static/gauge.css?v=0.2.1">
+        <link rel="stylesheet" href="static/gauge-glossy.css?v=0.2.1">
+        <style>
+            body {
+                font-family: sans-serif;
+                background-color: #d8d8d8;
+            }
+            .gauge-example {
+                display: flex;
+                flex-wrap: wrap;
+                text-align: center;
+                justify-content: left;
+            }
+            .gauge-example>div {
+                background-color: #ffffff;
+                width: 48%;
+                min-width: 350px;
+                margin: 5px;
+                text-align: center;
+                padding-top: 40px;
+                line-height: 25px;
+                font-size: 14px;
+            }
+            .gauge {
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="gauge-example">
+        <div class="gauge-glossy">
+            <h1 id="azHeader">Azimuth</h1>
+            <div id="azGauge" class="gauge" style="
+                --gauge-bg: #044841;
+                --gauge-value:45;
+                --gauge-display-value:45;
+                width:25vw;
+                height:25vw;">
+
+                <div class="ticks" id="ticksid" ondblclick="onDblClick(event);">
+                    <div class="tithe" style="--gauge-tithe-tick:0;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:1;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:2;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:3;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:4;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:5;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:6;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:7;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:8;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:9;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:10;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:11;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:12;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:13;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:14;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:15;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:16;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:17;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:18;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:19;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:20;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:21;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:22;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:23;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:24;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:25;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:26;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:27;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:28;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:29;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:30;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:31;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:32;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:33;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:34;"></div>
+                    <div class="tithe" style="--gauge-tithe-tick:35;"></div>
+                    <div class="az0"></div>
+                    <div class="az45"></div>
+                    <div class="az90"></div>
+                    <div class="az135"></div>
+                    <div class="az180"></div>
+                    <div class="az225"></div>
+                    <div class="az270"></div>
+                    <div class="az315"></div>
+                </div>
+                <div class="tick-circle"></div>
+
+                <div class="needle">
+                    <div class="needle-head"></div>
+                </div>
+                <div class="labels">
+                    <div class="value-label"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var config = { responsive: true };
+
+        // WebSocket support
+        var gateway;
+        if (window.location.port)
+            gateway = "ws://" + window.location.hostname + ":" + window.location.port +"/ws";
+        else
+            gateway = "ws://" + window.location.hostname + "/ws";
+        //var gateway = 'ws://192.168.1.81/ws';
+        var websocket;
+        var disconnectionDetected = true;
+        var target = -1;
+        var pingId = null;
+        var tm = null;
+
+        window.addEventListener("load", onLoad);
+
+        function onDblClick(event) {
+            var x = event.offsetX / document.getElementById("ticksid").offsetWidth - 0.5;
+            var y = event.offsetY / document.getElementById("ticksid").offsetHeight - 0.5;
+            var rad = Math.atan2(y, x); // In radians
+            var az = rad * (180 / Math.PI) + 90;
+            if (az >= 360) az = 0;
+            if (az < 0) az += 360;
+            az = Math.round(az);
+            if (websocket.readyState == WebSocket.OPEN) {
+                target = az;
+                // Avoid overlapping in azimuth range 358..2
+                if (target < 2)
+                    target = 2;
+                else if (target > 357)
+                    target = 357;
+                const targetstr = target.toString();
+                websocket.send(targetstr); // Send rotation target azimuth to client
+                document.getElementById("azHeader").innerText = "Azimuth target: " + target;
+            }
+        }
+
+        function onLoad() {
+          initializeSocket();
+        }
+
+        function initializeSocket() {
+          console.log("Opening WebSocket connection to " + gateway);
+          websocket = new WebSocket(gateway);
+          websocket.onopen = onOpen;
+          websocket.onclose = onClose;
+          websocket.onmessage = onMessage;
+        }
+
+        function disconDetected() {
+            console.log("Disconnection detected");
+            document.getElementById("azHeader").innerText = "(Not connected)";
+            disconnectionDetected = true;
+            clearInterval(pingId);
+            pingId = null;
+            clearTimeout(tm);
+            target = -1
+            setTimeout(initializeSocket, 2000);
+        }
+
+        function ping() {
+            websocket.send("ping");
+        }
+
+        function onOpen(event) {
+          console.log("Connected to WebSocket");
+          pingId = setInterval(ping, 500);
+        }
+
+        function onClose(event) {
+          console.log("Lost connection");
+          disconDetected()
+        }
+
+        function onMessage(event) {
+          clearTimeout(tm);
+          console.log("WebSocket message received:", event);
+          updateValues(event.data);
+        }
+
+        function updateValues(data) {
+          if (disconnectionDetected) {
+            document.getElementById("azHeader").innerText = "Azimuth";
+            disconnectionDetected = false;
+            target = -1
+          }
+          if (target != -1 && "" + target == data) {
+            document.getElementById("azHeader").innerText = "Azimuth";
+            target = -1;
+         }
+
+          console.log("Azimuth " + data);
+          document.getElementById("azGauge").style.setProperty('--gauge-display-value', data);
+          document.getElementById("azGauge").style.setProperty('--gauge-value', data);
+        }
+    </script>
+    </body>
+</html>
