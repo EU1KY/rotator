@@ -1,3 +1,5 @@
+# Copyright (c) 2019 Miguel Grinberg; MIT License
+
 from utemplate import recompile
 
 _loader = None

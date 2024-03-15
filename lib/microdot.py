@@ -5,6 +5,8 @@ microdot
 The ``microdot`` module defines a few classes that help implement HTTP-based
 servers for MicroPython and standard Python, with multithreading support for
 Python interpreters that support it.
+
+Copyright (c) 2019 Miguel Grinberg; MIT License
 """
 try:
     from sys import print_exception

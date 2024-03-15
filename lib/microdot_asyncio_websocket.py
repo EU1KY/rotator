@@ -1,3 +1,5 @@
+# Copyright (c) 2019 Miguel Grinberg; MIT License
+
 from microdot_asyncio import Response
 from microdot_websocket import WebSocket as BaseWebSocket
 

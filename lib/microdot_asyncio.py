@@ -5,6 +5,8 @@ microdot_asyncio
 The ``microdot_asyncio`` module defines a few classes that help implement
 HTTP-based servers for MicroPython and standard Python that use ``asyncio``
 and coroutines.
+
+Copyright (c) 2019 Miguel Grinberg; MIT License
 """
 try:
     import uasyncio as asyncio

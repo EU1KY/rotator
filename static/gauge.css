@@ -1,3 +1,5 @@
+/* Copyright (c) 2020 rotvalli; MIT License
+   Copyright (c) 2024 modified by EU1KY; MIT License */
 .gauge {
     position: relative;
     background: var(--gauge-bg);

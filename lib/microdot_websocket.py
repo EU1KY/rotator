@@ -1,3 +1,5 @@
+# Copyright (c) 2019 Miguel Grinberg; MIT License
+
 import binascii
 import hashlib
 from microdot import Response
