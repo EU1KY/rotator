@@ -27,6 +27,7 @@ import sys
 import errno
 from time import sleep_ms, localtime
 from micropython import alloc_emergency_exception_buf
+from machine import reset
 
 # constant definitions
 _CHUNK_SIZE = const(1024)
@@ -409,7 +410,9 @@ def close_client(cl):
         if client.command_client == cl:
             del client_list[i]
             break
-
+    #Reset device on client disconnection
+    stop()
+    reset()
 
 def accept_ftp_connect(ftpsocket, local_addr):
     # Accept new calls for the server
