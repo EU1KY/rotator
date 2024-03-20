@@ -3,7 +3,7 @@
 This is just a preliminary description.
 
 Hardware required:
-- ESP-WROOM-32 board
+- ESP-WROOM-32 Devkit board
 - AS5600 azimuth encoder board
 - NEMA23 stepper motor with 8mm shaft (56mm/2.8A is suitable enough) 
 - 6600 type stepper motor driver, or similar, that supports 1/8 substeps
