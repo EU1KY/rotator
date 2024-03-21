@@ -14,3 +14,4 @@ while station.isconnected() == False:
 #print('WiFi connection successful')
 print(station.ifconfig())
 gc.enable()
+import uftpd

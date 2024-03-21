@@ -62,11 +62,6 @@ def static(request, path):
     return send_file("static/" + path)
 
 
-@app.route("/ftp") #Stop everything and run FTP server
-def runftp(request):
-    raise KeyboardInterrupt
-
-
 async def update_az():
     global azimuth
     #Read raw angle
@@ -160,5 +155,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     gc.collect()
-    import uftpd
     print("Exit main.py")
