@@ -119,7 +119,7 @@ def createmap(locator):
     m = Basemap( projection='aeqd',
                  lat_0=lat_0,
                  lon_0=lon_0,
-                 resolution='h')
+                 resolution='l')
 
     m.drawcountries(linewidth=0.1, color='#202020')
 
