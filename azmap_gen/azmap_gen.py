@@ -21,6 +21,7 @@ import matplotlib.patheffects as PathEffects
 from PIL import Image
 
 def toLoc(locator):
+    # from https://github.com/space-physics/maidenhead/blob/main/src/maidenhead/to_location.py
     if not isinstance(locator, str):
         raise TypeError('QTH locator must be a string')
     locator = locator.strip().upper()
