@@ -95,9 +95,11 @@ async def pwm_proc():
                 target_s = target
                 if target_s < azimuth:
                     dirPin.value(DIRCCW)
+                    dir = DIRCCW
                     #print("Dir=CCW")
                 else:
                     dirPin.value(DIRCW)
+                    dir = DIRCW
                     #print("Dir=CW")
                 frequency = FREQ_LO
                 outpwm = PWM(pwmPin, freq=frequency, duty=512)
@@ -112,7 +114,9 @@ async def pwm_proc():
                     if target_s != target:
                         #print("Target has changed")
                         break
-                    if target_s == azimuth:
+                    if ( target_s == azimuth or
+                         (dir == DIRCW and target_s < azimuth) or
+                         (dir == DIRCCW and target_s > azimuth) ):
                         #print("Azimuth reached the target")
                         target = -1
                         break

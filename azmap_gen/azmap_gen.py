@@ -1,10 +1,11 @@
+#! /usr/bin/env python3
 """Amateur Radio azimuthal map generation script by EU1KY
 
    Install prerequisites before use:
        pip install scipy numpy matplotlib basemap basemap-data-hires
 
    Usage:
-       python azmap.py your_qth_locator
+       python azmap_gen.py your_qth_locator
 
    Example:
        python azmap.py KO33jn
@@ -145,7 +146,7 @@ def createmap(locator):
 
     print("Generating a small map file azmap_s.jpg...")
     img = Image.open(file_to_save)
-    newimg = img.crop(box=(428, 171, 428+1112, 171+1112)) # Ugly hardcode, but autocrop is not trivial for matplotlib image
+    newimg = img.crop(box=(428, 171, 428+1112, 171+1112)) # Ugly hardcode, todo: fix it
     newimg = newimg.resize((400, 400), resample = Image.LANCZOS)
     newimg = newimg.convert('RGB')
     newimg.save('azmap_s.jpg')
