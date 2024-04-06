@@ -36,4 +36,4 @@ My current working prototype:
 ![prototype_2](https://github.com/EU1KY/rotator/assets/1841648/a3a52a5f-4010-4889-8b40-02e133d503e9)
 ![prototype_3](https://github.com/EU1KY/rotator/assets/1841648/304d80ba-6bec-44a8-8fd8-6762de2d77b1)
 
-Здесь черновик подробной инструкции, что и как делать, по на русском: https://github.com/EU1KY/rotator/wiki
+Здесь черновик подробной инструкции, что и как делать, пока только на русском: https://github.com/EU1KY/rotator/wiki
