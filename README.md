@@ -15,6 +15,8 @@ The code is working under Micropython environment flashed to the ESP32 board.
 All configuration is in the config.py file. A custom azimuth map can be placed as a rotator's web gauge background, it can be
 created with the online tool at https://ns6t.net/azimuth/ , then properly cropped as a square bitmap and saved as a 400x400 pixels image file in static/azmap_s.jpg .
 
+Alternatively, use the included azmap_gen/azmap_gen.py Python script to generate azimuthal map file for your QTH locator. It looks much better.
+
 The only wiring to the rotator is just a power supply (14 Volts 1A max is enough), it then connects to the preconfigured WiFi
 network and appears as a web server in your LAN.
 
