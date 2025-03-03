@@ -8,6 +8,7 @@ import gc
 from config import RotatorConfig as CFG
 station = network.WLAN(network.STA_IF)
 station.active(True)
+station.config(dhcp_hostname = CFG.HOSTNAME)
 station.connect(CFG.WIFI_SSID, CFG.WIFI_PASSWD)
 while station.isconnected() == False:
     pass

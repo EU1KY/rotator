@@ -1,6 +1,7 @@
 class RotatorConfig:
     WIFI_SSID = 'Your_WiFi_SSID'
     WIFI_PASSWD = 'Your_WiFi_password'
+    HOSTNAME = 'rotator.local'  # mDNS name of the rotator in the WiFi network
     AZ_CORRECTION = -6
     PWM_PIN = 4
     DIR_PIN = 16
