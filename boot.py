@@ -1,4 +1,4 @@
-from machine import reset
+from machine import reset, Pin
 import sys
 sys.path.reverse()
 import esp
@@ -6,6 +6,11 @@ esp.osdebug(None)
 import network
 import gc
 from config import RotatorConfig as CFG
+
+# 1st thing to do: remove Enable signal from the stepper motor controler.
+enPin = Pin(CFG.EN_PIN, Pin.OUT)
+enPin.value(CFG.ROTDISABLE)
+
 station = network.WLAN(network.STA_IF)
 station.active(True)
 station.config(dhcp_hostname = CFG.HOSTNAME)
