@@ -33,6 +33,12 @@
             .gauge {
                 margin: auto;
             }
+            #mouseaz {
+                font-size: 1.2em;
+                color: white;
+                position: absolute;
+                pointer-events: none;
+            }
         </style>
     </head>
     <body>
@@ -103,6 +109,7 @@
             </div>
         </div>
     </div>
+    <div id="mouseaz"></div>
     <script type="text/javascript">
         var config = { responsive: true };
 
@@ -120,6 +127,31 @@
         var tm = null;
 
         window.addEventListener("load", onLoad);
+
+        document.getElementById('azGauge').addEventListener('mouseout', (event) => {
+            document.getElementById('mouseaz').style.visibility = 'hidden';
+        });
+
+        document.getElementById('azGauge').addEventListener('mouseover', (event) => {
+            document.getElementById('mouseaz').style.visibility = 'visible';
+        });
+    
+        document.getElementById('azGauge').addEventListener('mousemove', (event) => {
+            event = event || window.event; // IE-ism
+            if (event.clientX != null)
+            {
+                var x = event.offsetX / document.getElementById("ticksid").offsetWidth - 0.5;
+                var y = event.offsetY / document.getElementById("ticksid").offsetHeight - 0.5;
+                var rad = Math.atan2(y, x); // In radians
+                var az = rad * (180 / Math.PI) + 90;
+                if (az < 0) az += 360;
+                var az = Math.round(az);
+                const azdiv = document.getElementById('mouseaz');
+                azdiv.style.left = event.clientX + 20 + 'px';
+                azdiv.style.top = event.clientY + 'px';
+                azdiv.textContent = `${az}`;
+            }
+        });
 
         function onDblClick(event) {
             var x = event.offsetX / document.getElementById("ticksid").offsetWidth - 0.5;
