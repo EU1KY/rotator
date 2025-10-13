@@ -74,6 +74,8 @@ async def update_az():
         else:
             rawangle = int.from_bytes(bytes, 'big') & 0xFFF
             tazimuth = round(rawangle * 360 / 4096)
+            if CFG.AS_DIR_INVERT:
+                tazimuth = 360 - tazimuth
             tazimuth += correction
             if tazimuth >= 360: tazimuth -= 360
             elif tazimuth < 0: tazimuth += 360

@@ -17,3 +17,4 @@ class RotatorConfig:
     ROT_THRESHOLD_LO = 7
     I2C_SCL_PIN = 22
     I2C_SDA_PIN = 21
+    AS_DIR_INVERT = 0  # 0 or 1 depending on AS5600 DIR pin connection 
