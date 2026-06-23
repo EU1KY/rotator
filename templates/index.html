@@ -40,12 +40,20 @@
                 position: absolute;
                 pointer-events: none;
             }
+            .simpleanchor {
+               text-decoration: none;
+               font-size: medium;
+               color: inherit;
+            }
         </style>
     </head>
     <body>
     <div class="gauge-example">
         <div class="gauge-glossy">
-            <p id="HostName" style="font-size:x-small">{{ rotatorname }}</p>
+            <p id="HostName" style="font-size:x-small">
+                <a href="./ccw" class="simpleanchor">↺</a>
+                &nbsp;&nbsp;&nbsp;{{ rotatorname }} &nbsp;&nbsp;&nbsp;
+                <a href="./cw" class="simpleanchor">↻</a>
             <h1 id="azHeader">Azimuth</h1>
             <div id="azGauge" class="gauge" style="
                 --gauge-bg: #044841;
