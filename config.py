@@ -1,7 +1,7 @@
 class RotatorConfig:
     WIFI_SSID = 'Your_WiFi_SSID'
     WIFI_PASSWD = 'Your_WiFi_password'
-    HOSTNAME = 'rotator.local'  # mDNS name of the rotator in the WiFi network
+    HOSTNAME = 'rotator'  # mDNS name of the rotator in the WiFi network
     AZ_CORRECTION = -6
     PWM_PIN = 4
     DIR_PIN = 16
@@ -17,4 +17,6 @@ class RotatorConfig:
     ROT_THRESHOLD_LO = 7
     I2C_SCL_PIN = 22
     I2C_SDA_PIN = 21
-    AS_DIR_INVERT = 0  # 0 or 1 depending on AS5600 DIR pin connection 
+    AS_DIR_INVERT = 0  # 0 or 1 depending on AS5600 DIR pin connection
+    AZ_MIN = 2          # Minimum azimuth, degrees
+    AZ_MAX = 357        # Maximum azimuth, degrees

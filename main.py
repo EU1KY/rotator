@@ -22,6 +22,13 @@ FREQ_HI = CFG.FREQ_HI
 ROT_THRESHOLD_HI = CFG.ROT_THRESHOLD_HI
 ROT_THRESHOLD_LO = CFG.ROT_THRESHOLD_LO
 
+try:
+    AZ_MAX = CFG.AZ_MAX
+    AZ_MIN = CFG.AZ_MIN
+except:
+    AZ_MAX = 357
+    AZ_MIN = 2
+
 enPin.value(ROTDISABLE)
 
 # Initialize MicroDot
@@ -33,7 +40,33 @@ i2c = I2C(0, scl=Pin(CFG.I2C_SCL_PIN), sda=Pin(CFG.I2C_SDA_PIN), freq=400000)
 # root route
 @app.route('/')
 async def index(request):
-    return render_template('index.html')
+    return render_template('index.html', rotatorname = CFG.HOSTNAME + " " + station.ifconfig()[0])
+
+
+@app.route('/cw')
+async def ws_cw(request):
+    global target
+    target = -1
+    await asyncio.sleep(0.2)
+    dirPin.value(DIRCW)
+    tmppwm = PWM(pwmPin, freq=FREQ_LO, duty=512)
+    enPin.value(ROTENABLE)
+    await asyncio.sleep(1.0)
+    tmppwm.deinit()
+    enPin.value(ROTDISABLE)
+
+
+@app.route('/ccw')
+async def ws_ccw(request):
+    global target
+    target = -1
+    await asyncio.sleep(0.2)
+    dirPin.value(DIRCCW)
+    tmppwm = PWM(pwmPin, freq=FREQ_LO, duty=512)
+    enPin.value(ROTENABLE)
+    await asyncio.sleep(1.0)
+    tmppwm.deinit()
+    enPin.value(ROTDISABLE)
 
 
 @app.route('/ws')
@@ -46,11 +79,17 @@ async def read_sensor(request, ws):
         data = await ws.receive()
         try:
             tmp = int(data)
-            if tmp >= -1 and tmp < 360:
+            if tmp >= -1:
+                if tmp > AZ_MAX:
+                    tmp = AZ_MAX
+                elif tmp < AZ_MIN:
+                    tmp = AZ_MIN
                 target = tmp
+            else:
+                target = -1
         except:
             pass
-        await ws.send(str(azimuth))
+        await ws.send(f'{{ "azimuth" : {azimuth}, "target" : {target} }}')
 
 
 # Static CSS/JS

@@ -42,11 +42,11 @@ def shoot(lon, lat, azimuth, maxdist=20000):
     glon1 = lon * np.pi / 180.
     s = maxdist
     faz = azimuth * np.pi / 180.
- 
+
     EPS= 0.00000000005
     if ((np.abs(np.cos(glat1))<EPS) and not (np.abs(np.sin(faz))<EPS)):
         alert("Only N-S courses are meaningful, starting at a pole!")
- 
+
     a=6378.13
     f=1/298.257223563
     r = 1 - f
@@ -57,7 +57,7 @@ def shoot(lon, lat, azimuth, maxdist=20000):
         b=0.
     else:
         b=2. * np.arctan2 (tu, cf)
- 
+
     cu = 1. / np.sqrt(1 + tu * tu)
     su = tu * cu
     sa = cu * sf
@@ -81,7 +81,7 @@ def shoot(lon, lat, azimuth, maxdist=20000):
         y = e + e - 1.
         y = (((sy * sy * 4. - 3.) * y * cz * d / 6. + x) *
               d / 4. - cz) * sy * d + tu
- 
+
     b = cu * cy * cf - su * sy
     c = r * np.sqrt(sa * sa + b * b)
     d = su * cy + cu * sy * cf
@@ -90,19 +90,19 @@ def shoot(lon, lat, azimuth, maxdist=20000):
     x = np.arctan2(sy * sf, c)
     c = ((-3. * c2a + 4.) * f + 4.) * c2a * f / 16.
     d = ((e * cy * c + cz) * sy * c + y) * sa
-    glon2 = ((glon1 + x - (1. - c) * d * f + np.pi) % (2*np.pi)) - np.pi    
- 
+    glon2 = ((glon1 + x - (1. - c) * d * f + np.pi) % (2*np.pi)) - np.pi
+
     baz = (np.arctan2(sa, b) + np.pi) % (2 * np.pi)
- 
+
     glon2 *= 180./np.pi
     glat2 *= 180./np.pi
     baz *= 180./np.pi
- 
+
     return (glon2, glat2, baz)
 
 
 def createmap(locator):
-    lat_0, lon_0 = toLoc(locator) 
+    lat_0, lon_0 = toLoc(locator)
     file_to_save = "%s.png" % locator
     print("Generating map file %s, this may take some time to download a basemap image from the Internet..." % file_to_save)
 
@@ -110,7 +110,7 @@ def createmap(locator):
     ax.coastlines(resolution='110m', color='#2080A0', linewidth=0.2)
     ax.add_feature(cfeat.BORDERS, linestyle='-', alpha=1, linewidth=0.2, edgecolor='#202020')
     ax.stock_img()
-    
+
     # draw a dot at the center.
     plt.plot([lon_0], [lat_0], 'yo')
 
@@ -124,6 +124,12 @@ def createmap(locator):
         txt = plt.text(lon2, lat2, "%d" % az, verticalalignment = 'center', horizontalalignment='center',
                  fontsize = 7, color ='blue', alpha = 1.0, fontweight = 'bold', transform=ccrs.Geodetic())
         txt.set_path_effects(effects)
+        if az == 180:
+            #add QTH locator text
+            lon2, lat2, baz = shoot(lon_0, lat_0, az, 17000)
+            txt = plt.text(lon2, lat2, locator, verticalalignment = 'center', horizontalalignment='center',
+                     fontsize = 7, color ='blue', alpha = 1.0, fontweight = 'bold', transform=ccrs.Geodetic())
+            txt.set_path_effects(effects)
 
     #plt.show()
     plt.savefig(file_to_save, dpi=300)

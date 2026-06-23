@@ -1,3 +1,4 @@
+{% args rotatorname %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -26,7 +27,7 @@
                 min-width: 350px;
                 margin: 5px;
                 text-align: center;
-                padding-top: 40px;
+                padding-top: 20px;
                 line-height: 25px;
                 font-size: 14px;
             }
@@ -44,6 +45,7 @@
     <body>
     <div class="gauge-example">
         <div class="gauge-glossy">
+            <p id="HostName" style="font-size:x-small">{{ rotatorname }}</p>
             <h1 id="azHeader">Azimuth</h1>
             <div id="azGauge" class="gauge" style="
                 --gauge-bg: #044841;
@@ -122,7 +124,6 @@
         //var gateway = 'ws://192.168.1.81/ws';
         var websocket;
         var disconnectionDetected = true;
-        var target = -1;
         var pingId = null;
         var tm = null;
 
@@ -135,7 +136,7 @@
         document.getElementById('azGauge').addEventListener('mouseover', (event) => {
             document.getElementById('mouseaz').style.visibility = 'visible';
         });
-    
+
         document.getElementById('azGauge').addEventListener('mousemove', (event) => {
             event = event || window.event; // IE-ism
             if (event.clientX != null)
@@ -158,19 +159,14 @@
             var y = event.offsetY / document.getElementById("ticksid").offsetHeight - 0.5;
             var rad = Math.atan2(y, x); // In radians
             var az = rad * (180 / Math.PI) + 90;
+            var target = -1;
             if (az >= 360) az = 0;
             if (az < 0) az += 360;
             az = Math.round(az);
             if (websocket.readyState == WebSocket.OPEN) {
                 target = az;
-                // Avoid overlapping in azimuth range 358..2
-                if (target < 2)
-                    target = 2;
-                else if (target > 357)
-                    target = 357;
                 const targetstr = target.toString();
                 websocket.send(targetstr); // Send rotation target azimuth to client
-                document.getElementById("azHeader").innerText = "Azimuth target: " + target;
             }
         }
 
@@ -193,8 +189,7 @@
             clearInterval(pingId);
             pingId = null;
             clearTimeout(tm);
-            target = -1
-            setTimeout(initializeSocket, 2000);
+            tm = setTimeout(initializeSocket, 2000);
         }
 
         function ping() {
@@ -218,19 +213,25 @@
         }
 
         function updateValues(data) {
-          if (disconnectionDetected) {
-            document.getElementById("azHeader").innerText = "Azimuth";
-            disconnectionDetected = false;
-            target = -1
-          }
-          if (target != -1 && "" + target == data) {
-            document.getElementById("azHeader").innerText = "Azimuth";
-            target = -1;
-         }
+          const _dataObj = JSON.parse(data);
+          console.log(_dataObj);
+          let _azimuth = _dataObj.azimuth
+          let _target = _dataObj.target
 
-          console.log("Azimuth " + data);
-          document.getElementById("azGauge").style.setProperty('--gauge-display-value', data);
-          document.getElementById("azGauge").style.setProperty('--gauge-value', data);
+          if (_target == -1) {
+            document.getElementById("azHeader").innerText = "Azimuth";
+          }
+          else {
+            document.getElementById("azHeader").innerText = "Azimuth target " + _target;
+          }
+
+          if (disconnectionDetected) {
+            disconnectionDetected = false;
+          }
+
+          console.log("Status: azimuth " + _azimuth + ", target " + _target);
+          document.getElementById("azGauge").style.setProperty('--gauge-display-value', _azimuth);
+          document.getElementById("azGauge").style.setProperty('--gauge-value', _azimuth);
         }
     </script>
     </body>

@@ -142,6 +142,13 @@ def createmap(locator):
         txt = plt.text(xpt, ypt, "%d" % az, verticalalignment = 'center', horizontalalignment='center',
                  fontsize = 7, color ='blue', alpha = 1.0, fontweight = 'bold')
         txt.set_path_effects(effects)
+        if az == 180:
+            #add QTH locator text
+            lon2, lat2, baz = shoot(lon_0, lat_0, az, 17000)
+            xpt, ypt = m(lon2, lat2)
+            txt = plt.text(xpt, ypt, locator, verticalalignment = 'center', horizontalalignment='center',
+                     fontsize = 7, color ='blue', alpha = 1.0, fontweight = 'bold')
+            txt.set_path_effects(effects)
 
     plt.savefig(file_to_save, dpi=300)
 
