@@ -51,9 +51,10 @@
     <div class="gauge-example">
         <div class="gauge-glossy">
             <p id="HostName" style="font-size:x-small">
-                <a href="./ccw" class="simpleanchor">↺</a>
+                <a href="#" class="simpleanchor" id="ccw">↺</a>
                 &nbsp;&nbsp;&nbsp;{{ rotatorname }} &nbsp;&nbsp;&nbsp;
-                <a href="./cw" class="simpleanchor">↻</a>
+                <a href="#" class="simpleanchor" id="cw">↻</a>
+            </p>
             <h1 id="azHeader">Azimuth</h1>
             <div id="azGauge" class="gauge" style="
                 --gauge-bg: #044841;
@@ -143,6 +144,18 @@
 
         document.getElementById('azGauge').addEventListener('mouseover', (event) => {
             document.getElementById('mouseaz').style.visibility = 'visible';
+        });
+
+        document.getElementById('cw').addEventListener('click', function(event) {
+            if (websocket.readyState == WebSocket.OPEN) {
+                websocket.send("cw");
+            }
+        });
+
+        document.getElementById('ccw').addEventListener('click', function(event) {
+            if (websocket.readyState == WebSocket.OPEN) {
+                websocket.send("ccw");
+            }
         });
 
         document.getElementById('azGauge').addEventListener('mousemove', (event) => {

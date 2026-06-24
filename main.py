@@ -43,32 +43,6 @@ async def index(request):
     return render_template('index.html', rotatorname = CFG.HOSTNAME + " " + station.ifconfig()[0])
 
 
-@app.route('/cw')
-async def ws_cw(request):
-    global target
-    target = -1
-    await asyncio.sleep(0.2)
-    dirPin.value(DIRCW)
-    tmppwm = PWM(pwmPin, freq=FREQ_LO, duty=512)
-    enPin.value(ROTENABLE)
-    await asyncio.sleep(1.0)
-    tmppwm.deinit()
-    enPin.value(ROTDISABLE)
-
-
-@app.route('/ccw')
-async def ws_ccw(request):
-    global target
-    target = -1
-    await asyncio.sleep(0.2)
-    dirPin.value(DIRCCW)
-    tmppwm = PWM(pwmPin, freq=FREQ_LO, duty=512)
-    enPin.value(ROTENABLE)
-    await asyncio.sleep(1.0)
-    tmppwm.deinit()
-    enPin.value(ROTDISABLE)
-
-
 @app.route('/ws')
 @with_websocket
 async def read_sensor(request, ws):
@@ -88,7 +62,28 @@ async def read_sensor(request, ws):
             else:
                 target = -1
         except:
-            pass
+            if data == 'cw':
+                target = -1
+                await asyncio.sleep(0.2)
+                target = -2
+                dirPin.value(DIRCW)
+                tmppwm = PWM(pwmPin, freq=FREQ_LO, duty=512)
+                enPin.value(ROTENABLE)
+                await asyncio.sleep(1.0)
+                tmppwm.deinit()
+                enPin.value(ROTDISABLE)
+                target = -1
+            elif data == 'ccw':
+                target = -1
+                await asyncio.sleep(0.2)
+                target = -2
+                dirPin.value(DIRCCW)
+                tmppwm = PWM(pwmPin, freq=FREQ_LO, duty=512)
+                enPin.value(ROTENABLE)
+                await asyncio.sleep(1.0)
+                tmppwm.deinit()
+                enPin.value(ROTDISABLE)
+                target = -1
         await ws.send(f'{{ "azimuth" : {azimuth}, "target" : {target} }}')
 
 
@@ -128,6 +123,8 @@ async def pwm_proc():
     global azimuth
     outpwm = None
     while True:
+        while target == -2: #forced rotation is in progress
+            await asyncio.sleep(0.1)
         if target != -1:
             if azimuth == -1 or target == azimuth:
                 target = -1
